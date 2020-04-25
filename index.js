@@ -31,7 +31,7 @@ function prepareOptions ({
 function parse(rawData) {
     return rawData.split('\n').reduce(
     (acc, line) => {
-        const parts = line.split('\t');
+        const parts = line.split('\t').map(s => s.trim());
         return {
             ...acc,
             [parts[0]]: parts[1],
