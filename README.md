@@ -9,7 +9,7 @@ ShortURL TSV Express Middleware
 Features
 --------------------------
 - **Minimal maintenance (small, no NPM dependencies)** <br>
-It's 107 lines of JavaScript and no external dependencies.
+It's 139 simple lines of JavaScript and no external dependencies.
 
 - **Manage your shortURLs with Google Sheets**<br>
 No additional persistence needed, set permissions, use formulas and create your own user interfaces.
@@ -31,7 +31,7 @@ const createMiddleware = require('./index');
 let server;
 
 app.use(createMiddleware({
-    url: "Your TSV file",
+    url: "URL to your TSV file",
     onError: error => {
         console.error(error);
         server.close();
