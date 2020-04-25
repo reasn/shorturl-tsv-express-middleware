@@ -2,8 +2,9 @@ ShortURL TSV Express Middleware
 ===============================
 ### Comfortably manage your shortURLs with Google Sheets
 
-![Cross-Platform Compatibility](https://apitools.dev/img/badges/os-badges.svg)]
+![Cross-Platform Compatibility](https://apitools.dev/img/badges/os-badges.svg)
 [![License](https://img.shields.io/github/license/reasn/shorturl-tsv-express-middleware)](LICENSE)
+[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen)](https://plant.treeware.earth/reasn/shorturl-tsv-express-middleware)
 
 Features
 --------------------------
