@@ -11,7 +11,7 @@ function prepareOptions ({
     log
 }) {
 
-        if(typeof url !== 'string') {
+    if(typeof url !== 'string') {
         throw new Error('options.url must be the url of a valid tsv file');
     }
     if(typeof onError !== 'function') {
