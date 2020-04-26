@@ -117,12 +117,13 @@ function create(options) {
     };
 
     middleware.update = createUpdate(options, state);
-    middleware.stop = () => clearInterval(interval);
+    middleware.stop = () => undefined;
     middleware.start = () => {
         
         middleware.update();
         const interval = setInterval(middleware.update, options.interval);
         interval.unref();
+        middleware.stop = () => clearInterval(interval);
     };
 
     if(!options.preventAutoStart) {
