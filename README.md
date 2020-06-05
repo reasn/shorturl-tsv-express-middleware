@@ -55,6 +55,27 @@ Use Google Sheets as management interface
 * Make sure to check `Automatically republish when changes are made`.
 * Copy the url to your newly published file and use it in your script as options.url
 
+Runtime Configuration
+--------------------------
+
+```javascript
+app.use(createMiddleware({
+    url, // The URL to your TSV file
+    onError, // error handler (`error => undfined`)
+    request, //request || https.get,
+    interval, // Interval to fetch updates, defaults to 1000 * 60 * 5, i.e. 5 minutes
+    preventAutoStart, // Unless set to true, the regular fetching of updates is starts when invoking createMiddleware()
+    updateRoute, // Exposes a route to force updates via GET request. This can be used for a reflected (D)DOS. Check whether that's a threat before using.
+    log, // log message handler (`message => undefined`)
+    maxOpenRequests, // The number of possible open requests to fetch updates, default: 5
+    maxHops, // The number of redirect lookups before assuming a circular redirect, default: 50
+    };
+}));
+
+server = app.listen(process.env.PORT || 3000);
+
+```
+
 
 Contributing
 --------------------------
