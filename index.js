@@ -1,14 +1,14 @@
 const https = require('https');
 
-const MAX_OPEN_REQUESTS = 5;
-
 function prepareOptions ({
     url,
     request,
     onError,
     preventAutoStart,
     updateRoute,
-    log
+    log,
+    maxHops,
+    maxOpenRequests,
 }) {
 
     if(typeof url !== 'string') {
@@ -25,7 +25,9 @@ function prepareOptions ({
         preventAutoStart: !!preventAutoStart,
         updateRoute: updateRoute,
         log: log || (message => undefined),
-    }
+        maxOpenRequests: 5,
+        maxHops: 50,
+    };
 };
 
 function parse(rawData) {
@@ -40,11 +42,20 @@ function parse(rawData) {
     {});
 }
 
-function createUpdate({url, request, onError, log}, state) {
+function createUpdate(
+    {
+        url,
+        request,
+        onError,
+        log,
+        maxOpenRequests
+    },
+    state
+    ) {
     return callback => {
         log('Updating redirects...');
-        if(state.openRequests >= MAX_OPEN_REQUESTS) {
-            onError(`Cannot run more than ${MAX_OPEN_REQUESTS} requests concurrently. Check if interval is too small or requests fail.`);
+        if(state.openRequests >= maxOpenRequests) {
+            onError(`Cannot run more than ${maxOpenRequests} requests concurrently. Check if interval is too small or requests fail.`);
             return;
         }
         state.openRequests++;
@@ -82,6 +93,11 @@ function createUpdate({url, request, onError, log}, state) {
     }
 }
 
+function find(redirects, url) {
+    const redirect = Object.keys(redirects).find(candidate => url === `/${candidate}/` || url === `/${candidate}`);
+    return redirects[redirect];
+}
+
 function create(options) {
     
     const state = {
@@ -97,17 +113,29 @@ function create(options) {
             return;
         }
 
-        let redirect = Object.keys(state.redirects).find(url => req.url === `/${url}/` || req.url === `/${url}`);
-
         // Allow setting of default redirect for "/".
-        if(!redirect && req.url === '' || req.url === '/' && state.redirects['/']) {
-            redirect = '/';
+        const url = req.url === ''
+                    ? '/'
+                    : req.url;
+        let target = find(state.redirects, req.url);
+
+        let hops = options.maxHops;
+        while(target && target.startsWith('/')) {
+            target = find(state.redirects, target);
+            if(--hops > 0) {
+                res.status(500)
+                res.send(
+                    `Stopped after ${options.maxHops} hops, `
+                    + `detected possible circular redirect for ` + url.replace(/[^\w/-]+/g, '?')
+                );
+                return;
+            }
         }
 
-        if(redirect) {
-            options.log(`Redirecting (${redirect})`);
+        if(target) {
+            options.log(`Redirecting (${url})`);
             res.writeHead(302, {
-                Location: state.redirects[redirect],
+                Location: target,
             });
             res.end();
             return;
