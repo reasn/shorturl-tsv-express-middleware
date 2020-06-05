@@ -25,7 +25,7 @@ function prepareOptions ({
         preventAutoStart: !!preventAutoStart,
         updateRoute: updateRoute,
         log: log || (message => undefined),
-        maxOpenRequests: maxOpenRequests > 0
+            maxOpenRequests: maxOpenRequests > 0
                          ? maxOpenRequests
                          : 5,
         maxHops: maxHops > 0
@@ -130,6 +130,7 @@ function create(options) {
                 res.status(500)
                 res.send(
                     `Stopped after ${options.maxHops} hops, `
+                    // Filters out most characters to prevent injection attacks
                     + `detected possible circular redirect for ` + url.replace(/[^\w/-]+/g, '?')
                 );
                 return;
