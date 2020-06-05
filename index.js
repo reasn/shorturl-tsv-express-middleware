@@ -25,8 +25,12 @@ function prepareOptions ({
         preventAutoStart: !!preventAutoStart,
         updateRoute: updateRoute,
         log: log || (message => undefined),
-        maxOpenRequests: 5,
-        maxHops: 50,
+        maxOpenRequests: maxOpenRequests > 0
+                         ? maxOpenRequests
+                         : 5,
+        maxHops: maxHops > 0
+                 ? maxHops
+                 : 50,
     };
 };
 
