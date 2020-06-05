@@ -58,13 +58,15 @@ Use Google Sheets as management interface
 Runtime Configuration
 --------------------------
 
+Below is an example with all possible `options` parameters.
+
 ```javascript
 app.use(createMiddleware({
     url, // The URL to your TSV file
     onError, // error handler (`error => undfined`)
     request, //request || https.get,
-    interval, // Interval to fetch updates, defaults to 1000 * 60 * 5, i.e. 5 minutes
-    preventAutoStart, // Unless set to true, the regular fetching of updates is starts when invoking createMiddleware()
+    interval, // Interval to fetch updates, default: 1000 * 60 * 5, i.e. 5 minutes
+    preventAutoStart, // Unless set to true, the regular fetching of updates is starts when invoking createMiddleware(), default: false
     updateRoute, // Exposes a route to force updates via GET request. This can be used for a reflected (D)DOS. Check whether that's a threat before using.
     log, // log message handler (`message => undefined`)
     maxOpenRequests, // The number of possible open requests to fetch updates, default: 5
