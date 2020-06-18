@@ -106,7 +106,10 @@ function createUpdate(
 }
 
 function find(redirects, url) {
-    const redirect = Object.keys(redirects).find(candidate => url === `/${candidate}/` || url === `/${candidate}`);
+    const redirect = Object.keys(redirects).find(candidate => 
+        url === `/${candidate}/`
+        || url === `/${candidate}`
+        || url === '/' && candidate === '/');
     return redirects[redirect];
 }
 
@@ -130,7 +133,9 @@ function create(options) {
                     ? '/'
                     : req.url;
         let target = find(state.redirects, req.url);
-
+        console.log(target);
+console.log(req.url);
+console.log(state.redirects);
         let hops = options.maxHops;
         while(target && target.startsWith('/')) {
             target = find(state.redirects, target);
