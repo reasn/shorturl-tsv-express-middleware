@@ -1,6 +1,6 @@
 {
   "name": "shorturl-tsv-express-middleware",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A simple express middleware that regularly fetches redirects formatted as tsv (tabulator seperated values) to provide short urls. Built with auto-publish by Google Sheets in mind to provide the most comfortable user interface.",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,5 @@
   },
   "homepage": "https://github.com/reasn/shorturl-tsv-express-middleware#readme",
   "dependencies": {
-    "express": "^4.17.1"
   }
 }
