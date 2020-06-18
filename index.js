@@ -64,36 +64,44 @@ function createUpdate(
         }
         state.openRequests++;
 
-        request(url, res => {
-        if (res.statusCode !== 200) {
-            // Consume response data to free up memory
-            res.resume();
-            onError(new Error(`Request Failed. Status Code: ${res.statusCode}`));
-            return;
-        }
-        
-        res.setEncoding('utf8');
-        let rawData = '';
-        res.on('data', chunk => { rawData += chunk; });
-        res.on('end', () => {
-            try {
-                log('Parsing');
-                state.redirects = parse(rawData);
-                state.openRequests--;
-                const count = Object.keys(state.redirects).length;
-                if(count < 10) {
-                    log(state.redirects);
-                }
-                log(`Update successful (${count} redirects).`);
-                if(typeof callback === 'function') {
-                    callback(state.redirects);
-                }
-            } catch (e) {
-                onError(e);
+        const handleResponse = res => {
+            
+            if (res.statusCode !== 200) {
+                // Consume response data to free up memory
+                res.resume();
+                onError(new Error(`Update request Failed. Status Code: ${res.statusCode}`));
                 return;
             }
-        });
-        }).on('error', onError);
+
+            res.setEncoding('utf8');
+            let rawData = '';
+            res.on('data', chunk => { rawData += chunk; });
+            res.on('end', () => {
+                try {
+                    log('Parsing');
+                    state.redirects = parse(rawData);
+                    state.openRequests--;
+                    const count = Object.keys(state.redirects).length;
+                    if(count < 10) {
+                        log(state.redirects);
+                    }
+                    log(`Update successful (${count} redirects).`);
+                    if(typeof callback === 'function') {
+                        callback(state.redirects);
+                    }
+                } catch (e) {
+                    onError(e);
+                    return;
+                }
+            });
+        }
+
+        // Repeat request if the server asks for a redirect
+        request(url, res => 
+            [301, 302, 303, 307, 308].includes(res.statusCode)
+            ? request(res.headers.location, handleResponse).on('error', onError)
+            : handleResponse(res)
+        ).on('error', onError);
     }
 }
 
@@ -152,7 +160,6 @@ function create(options) {
     middleware.update = createUpdate(options, state);
     middleware.stop = () => undefined;
     middleware.start = () => {
-        
         middleware.update();
         const interval = setInterval(middleware.update, options.interval);
         interval.unref();
