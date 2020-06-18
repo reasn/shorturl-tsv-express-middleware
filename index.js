@@ -68,7 +68,7 @@ function createUpdate(
         if (res.statusCode !== 200) {
             // Consume response data to free up memory
             res.resume();
-            onError(new Error(`Request Failed. Status Code: ${statusCode}`));
+            onError(new Error(`Request Failed. Status Code: ${res.statusCode}`));
             return;
         }
         
