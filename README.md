@@ -8,8 +8,8 @@ ShortURL TSV Express Middleware
 
 Features
 --------------------------
-- **Minimal maintenance (small, no NPM dependencies)** <br>
-It's 139 simple lines of JavaScript and no external dependencies.
+- **Minimal maintenance (small, single NPM dependency)** <br>
+It's 139 simple lines of JavaScript and one dependency to `parseurl` which comes with `express`.
 
 - **Manage your shortURLs with Google Sheets**<br>
 No additional persistence needed, set permissions, use formulas and create your own user interfaces.

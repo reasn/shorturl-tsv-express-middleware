@@ -1,4 +1,6 @@
 const https = require('https');
+const parseUrl = require('parseurl');
+
 
 function prepareOptions ({
     url,
@@ -132,9 +134,8 @@ function create(options) {
         const url = req.url === ''
                     ? '/'
                     : req.url;
-        let target = find(state.redirects, req.url);
-        console.log(target);
-
+        let target = find(state.redirects, parseUrl(req).pathname);
+        
         let hops = options.maxHops;
         while(target && target.startsWith('/')) {
             target = find(state.redirects, target);
