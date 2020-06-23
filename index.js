@@ -134,12 +134,11 @@ function create(options) {
                     : req.url;
         let target = find(state.redirects, req.url);
         console.log(target);
-console.log(req.url);
-console.log(state.redirects);
+
         let hops = options.maxHops;
         while(target && target.startsWith('/')) {
             target = find(state.redirects, target);
-            if(--hops > 0) {
+            if(--hops < 0) {
                 res.status(500)
                 res.send(
                     `Stopped after ${options.maxHops} hops, `
