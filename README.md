@@ -68,6 +68,7 @@ app.use(createMiddleware({
     interval, // Interval to fetch updates, default: 1000 * 60 * 5, i.e. 5 minutes
     preventAutoStart, // Unless set to true, the regular fetching of updates is starts when invoking createMiddleware(), default: false
     updateRoute, // Exposes a route to force updates via GET request. This can be used for a reflected (D)DOS. Check whether that's a threat before using.
+    responseCode, // the 3xx HTTP response code, default: 302
     log, // log message handler (`message => undefined`)
     maxOpenRequests, // The number of possible open requests to fetch updates, default: 5
     maxHops, // The number of redirect lookups before assuming a circular redirect, default: 50

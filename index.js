@@ -8,6 +8,7 @@ function prepareOptions ({
     onError,
     preventAutoStart,
     updateRoute,
+    responseCode,
     log,
     maxHops,
     maxOpenRequests,
@@ -26,6 +27,7 @@ function prepareOptions ({
         onError,
         preventAutoStart: !!preventAutoStart,
         updateRoute: updateRoute,
+        responseCode: responseCode || 302,
         log: log || (message => undefined),
             maxOpenRequests: maxOpenRequests > 0
                          ? maxOpenRequests
@@ -151,8 +153,8 @@ function create(options) {
         }
 
         if(target) {
-            options.log(`Redirecting (${url})`);
-            res.writeHead(302, {
+            options.log(`Redirecting (HTTP ${options.responseCode}): ${url}`);
+            res.writeHead(options.responseCode, {
                 Location: target,
             });
             res.end();
